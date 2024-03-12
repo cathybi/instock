@@ -1,6 +1,7 @@
 const express = require("express");
 const app = express();
 const cors = require("cors");
+const inventoriesRouter = require("./routes/inventoriesRouter");
 
 require("dotenv").config()
 const { PORT } = process.env;
@@ -13,6 +14,8 @@ app.use(cors()); // avoid CORS errors: allow clients from different domains to a
 app.get("/", (req, res) => {
     res.send("Welcome to Instock server!");
 });
+
+app.use("/api/inventories", inventoriesRouter);
 
 app.listen(PORT, () => {
     console.log(`Server starting on PORT:${PORT}`);
