@@ -1,5 +1,5 @@
-require('dotenv').config();
-// Update with your config settings.
+// Import dotenv to process environment variables from `.env` file.
+require("dotenv").config();
 
 /**
  * @type { Object.<string, import("knex").Knex.Config> }
