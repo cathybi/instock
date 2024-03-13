@@ -8,3 +8,7 @@ const inventoriesController = require('../controllers/inventories-controler');
 router.route('/').get(inventoriesController.index);
 
 module.exports = router;
+
+
+
+
