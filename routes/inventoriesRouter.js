@@ -5,5 +5,6 @@ const inventoriesController = require('../controllers/inventoriesControler');
 /**
  * Get the list of inventories
  */
-router.route('/').get(inventoriesController.index);
+router.route('/').get(inventoriesController.getAll);
+
 module.exports = router;
