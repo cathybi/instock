@@ -15,7 +15,6 @@ app.use(express.static("public"));
 // avoid CORS errors: allow clients from different domains to access server
 app.use(cors());
 
-
 // all warehouse routers
 app.use('/warehouse', warehouseRouter);
 app.use("/api/inventories", inventoriesRouter);

@@ -9,11 +9,11 @@ router.route("/").post(warehouseControllers.add);
 router.route("/:id").patch(warehouseControllers.update);
 
 
-/* this part used for test only!
+/* this part used for test router working only!
  router.get("/warehouse",(req,res)=>{
     res.send("successfully connected to router!")
  })
-this part used for test only!*/
+this part used for test router working only!*/
 
 
 module.exports = router;
