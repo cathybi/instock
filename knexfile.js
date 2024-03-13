@@ -1,8 +1,11 @@
 // Import dotenv to process environment variables from `.env` file.
 require("dotenv").config();
 
+/**
+ * @type { Object.<string, import("knex").Knex.Config> }
+ */
 module.exports = {
-  client: "mysql2",
+  client: 'mysql',
   connection: {
     host: process.env.DB_HOST,
     database: process.env.DB_NAME,
