@@ -16,7 +16,7 @@ app.use(express.static("public"));
 app.use(cors());
 
 // all warehouse routers
-app.use('/warehouse', warehouseRouter);
+app.use('/api/warehouses', warehouseRouter);
 app.use("/api/inventories", inventoriesRouter);
 
 app.listen(PORT, () => {

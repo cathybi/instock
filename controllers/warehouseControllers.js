@@ -93,9 +93,26 @@ const getInventoryListByWarehouseId = async (req, res) => {
   }
 };
 
+/**
+ * Return all inventories in json format
+ * @param {*} _req 
+ * @param {*} res 
+ */
+const getAll = async (_req, res) => {
+  try {
+    const data = await knex('warehouses');
+    res.status(200).json(data);
+  } catch (err) {
+    res.status(400).json({
+      message: `Error retrieving Warehouse: ${err}`,
+    });
+  }
+};
+
 module.exports = {
   add,
   update,
   getInventoryListByWarehouseId,
   findOne,
+  getAll,
 };
