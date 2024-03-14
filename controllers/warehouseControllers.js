@@ -53,7 +53,19 @@ const add = async (req, res) => {
     }
   };
 
+  //Trying to get inventorylist by warehouse id
+
+const getInventoryListByWarehouseId = async (req, res) => {
+  try {
+    const data = await knex('inventories').where({ warehouse_id: req.params.id });
+    res.status(200).json(data);
+  } catch (err) {
+    res.status(400).send(`Error retrieving warehouse: ${err}`);
+  }
+}
+
   module.exports = {
     add,
-    update
+    update,
+    getInventoryListByWarehouseId
   };
