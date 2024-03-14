@@ -9,4 +9,8 @@ router.route("/:id").patch(warehouseControllers.update);
 
 router.route("/:id").get(warehouseControllers.findOne);
 
+router
+  .route("/:id/inventories")
+  .get(warehouseControllers.getInventoryListByWarehouseId);
+
 module.exports = router;
