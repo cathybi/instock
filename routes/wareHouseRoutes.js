@@ -7,4 +7,6 @@ router.route("/").post(warehouseControllers.add);
 
 router.route("/:id").patch(warehouseControllers.update);
 
+router.route("/:id").get(warehouseControllers.findOne);
+
 module.exports = router;
