@@ -19,10 +19,6 @@ app.use(cors());
 app.use('/warehouse', warehouseRouter);
 app.use("/api/inventories", inventoriesRouter);
 
-
 app.listen(PORT, () => {
     console.log(`Server starting on PORT:${PORT}`);
 });
-
-
-// /api/warehouses/:id/inventories
