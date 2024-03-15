@@ -57,6 +57,7 @@ const update = async (req, res) => {
 
 //getting single warehouse
 const findOne = async (req, res) => {
+  console.log(req.params.id);
   try {
     const warehouseFound = await knex("warehouses").where({
       id: req.params.id,
