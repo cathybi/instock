@@ -1,8 +1,6 @@
 const knex = require("knex")(require("../knexfile"));
 
 const add = async (req, res) => {
-  console.log("body", req.body);
-
   if (
     !req.body.warehouse_name ||
     !req.body.address ||
@@ -20,9 +18,6 @@ const add = async (req, res) => {
 
   try {
     const newRecord = await knex("warehouses").insert(req.body);
-
-    console.log("newRecord", newRecord);
-
     const newWarehouseId = newRecord[0];
     const createdWarehouse = await knex("warehouses").where({
       id: newWarehouseId,
