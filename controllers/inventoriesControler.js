@@ -127,6 +127,9 @@ const addNewInventory = async (req, res) => {
       .send("Please provide all information for the request");
   }
 
+  const warehouseFound = await knex("warehouses").where({
+    id: req.body.warehouse_id,
+  });
   if (!warehouseFound[0]) {
     return res
       .status(400)
@@ -145,7 +148,7 @@ const addNewInventory = async (req, res) => {
     const result = await knex("inventories").insert(req.body);
 
     const newInventoryId = result[0];
-    const createdWarehouse = await knwx("invenorties").where({
+    const createdWarehouse = await knex("invenorties").where({
       id: newInventoryId,
     });
 
