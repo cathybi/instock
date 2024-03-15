@@ -54,7 +54,7 @@ const editSingleInventory = async (req, res) => {
 
     //Response returns 400 if the warehouse_id value does not exist in the warehouses table  
     const warehouseFound = await knex("warehouses").where({ id: req.body.warehouse_id });
-    if (!warehouseFound[0]) {      
+    if (!warehouseFound[0]) {
       return res.status(400).send(`The warehouse_id ${req.body.warehouse_id} does not exist in the warehouses table`);
     }
 
@@ -69,17 +69,39 @@ const editSingleInventory = async (req, res) => {
       .update(req.body);
 
     const updatedInventory = await knex("inventories").
-    where({ id: req.params.id });
+      where({ id: req.params.id });
 
     res.status(200).json(updatedInventory[0]);
 
   } catch (error) {
-    res.status(500).send(`Error in updating Inventory object :editSingleInventory() method: ${error}`);
+    res.status(500).send(`Error in updating Inventory for id :editSingleInventory() method: ${error}`);
+  }
+}
+
+/**
+ * J24BTW-30 : Back-End: API to DELETE an Inventory Item
+ * @param {*} req 
+ * @param {*} res   
+ */
+const deleteSingleInventory = async (req, res) => {
+  try {
+    const rowsDeleted = await knex('inventories').where({ id: req.params.id }).delete();
+
+    if (rowsDeleted === 0) {
+      //Response returns 404 if inventory ID is not found
+      return res.status(404).send("Inventory Id is not found");
+    }
+    //Response returns 204 if successfully deleted
+    res.sendStatus(204);
+
+  } catch (error) {
+    res.status(500).send(`Error in deleteing  Inventory:deleteSingleInventory() method: ${error}`);
   }
 }
 
 module.exports = {
   getInventoriesList,
   getSingleInventory,
-  editSingleInventory
+  editSingleInventory,
+  deleteSingleInventory
 }
