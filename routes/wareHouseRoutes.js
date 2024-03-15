@@ -5,7 +5,7 @@ const warehouseControllers = require("../controllers/warehouseControllers");
 /**
  * Get list of warehouse
  */
-router.route('/').get(warehouseControllers.getAll);
+router.route("/").get(warehouseControllers.getAll);
 /**
  * Add a single warehouse
  */
