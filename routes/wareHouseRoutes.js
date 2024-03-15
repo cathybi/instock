@@ -21,4 +21,7 @@ router
   .route("/:id/inventories")
   .get(warehouseControllers.getInventoryListByWarehouseId);
 
+//DELETE an warehouse Item
+router.route('/:id').delete(warehouseControllers.deleteWarehouse);
+
 module.exports = router;
