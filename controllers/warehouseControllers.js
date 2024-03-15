@@ -104,10 +104,32 @@ const getAll = async (_req, res) => {
   }
 };
 
+/**
+ * J24BTW-19 : Back-End: API to DELETE an warehouse Item
+ * @param {*} req 
+ * @param {*} res   
+ */
+const deleteWarehouse = async (req, res) => {
+  try {
+    const rowsDeleted = await knex('warehouses').where({ id: req.params.id }).delete();
+
+    if (rowsDeleted === 0) {
+      //Response returns 404 if warehouse ID is not found
+      return res.status(404).json({ message: `Warehouses with ID ${req.params.id} not found` });
+    }
+    //Response returns 204 if successfully deleted
+    res.sendStatus(204);
+
+  } catch (error) {
+    res.status(500).json({message:`Error in deleting  warehouses ${error}`});
+  }
+}
+
 module.exports = {
   add,
   update,
   getInventoryListByWarehouseId,
   findOne,
   getAll,
+  deleteWarehouse
 };

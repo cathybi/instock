@@ -89,13 +89,13 @@ const deleteSingleInventory = async (req, res) => {
 
     if (rowsDeleted === 0) {
       //Response returns 404 if inventory ID is not found
-      return res.status(404).send("Inventory Id is not found");
+      return res.status(404).json({message: `Inventory Id ${req.params.id} is not found`});
     }
     //Response returns 204 if successfully deleted
     res.sendStatus(204);
 
   } catch (error) {
-    res.status(500).send(`Error in deleteing  Inventory:deleteSingleInventory() method: ${error}`);
+    res.status(500).json({message:`Error in deleting  Inventory: ${error}`});
   }
 }
 
