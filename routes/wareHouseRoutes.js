@@ -15,13 +15,16 @@ router.route("/").post(warehouseControllers.add);
  */
 router.route("/:id").patch(warehouseControllers.update);
 
-router.route("/warehousedetails/:id").get(warehouseControllers.findOne);
+/**
+ * API to GET a Single Warehouse
+ */
+router.route("/:id").get(warehouseControllers.findOne);
 
 router
   .route("/:id/inventories")
   .get(warehouseControllers.getInventoryListByWarehouseId);
 
 //DELETE an warehouse Item
-router.route('/:id').delete(warehouseControllers.deleteWarehouse);
+router.route("/:id").delete(warehouseControllers.deleteWarehouse);
 
 module.exports = router;
