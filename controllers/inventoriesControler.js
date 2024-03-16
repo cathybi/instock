@@ -7,7 +7,17 @@ const knex = require("knex")(require("../knexfile"));
  */
 const getInventoriesList = async (_req, res) => {
   try {
-    const data = await knex("inventories");
+    const data = await knex('inventories')
+    .join('warehouses', 'inventories.warehouse_id', '=', 'warehouses.id')
+    .select(
+      'inventories.id as id',
+      'warehouses.warehouse_name as warehouse_name',
+      'inventories.item_name as item_name',
+      'inventories.description as description',
+      'inventories.category as category',
+      'inventories.status as status',
+      'inventories.quantity as quantity',
+    );
     res.status(200).json(data);
   } catch (err) {
     res.status(500).json({
@@ -23,7 +33,18 @@ const getInventoriesList = async (_req, res) => {
  */
 const getSingleInventory = async (req, res) => {
   try {
-    const inventory = await knex("inventories").where({ id: req.params.id });
+    const inventory = await knex('inventories')
+    .where({ 'inventories.id': req.params.id })
+    .join('warehouses', 'inventories.warehouse_id', '=', 'warehouses.id')
+    .select(
+      'inventories.id as id',
+      'warehouses.warehouse_name as warehouse_name',
+      'inventories.item_name as item_name',
+      'inventories.description as description',
+      'inventories.category as category',
+      'inventories.status as status',
+      'inventories.quantity as quantity',
+    );;
     if (inventory[0]) {
       res.status(200).json(inventory[0]);
     } else {
