@@ -5,7 +5,7 @@ const warehouseControllers = require("../controllers/warehouseControllers");
 /**
  * Get list of warehouse
  */
-router.route('/').get(warehouseControllers.getAll);
+router.route("/").get(warehouseControllers.getAll);
 /**
  * Add a single warehouse
  */
@@ -15,6 +15,9 @@ router.route("/").post(warehouseControllers.add);
  */
 router.route("/:id").patch(warehouseControllers.update);
 
+/**
+ * API to GET a Single Warehouse
+ */
 router.route("/:id").get(warehouseControllers.findOne);
 
 router
@@ -22,6 +25,6 @@ router
   .get(warehouseControllers.getInventoryListByWarehouseId);
 
 //DELETE an warehouse Item
-router.route('/:id').delete(warehouseControllers.deleteWarehouse);
+router.route("/:id").delete(warehouseControllers.deleteWarehouse);
 
 module.exports = router;
