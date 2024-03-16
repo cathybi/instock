@@ -55,9 +55,7 @@ const update = async (req, res) => {
   }
 };
 
-//getting single warehouse
 const findOne = async (req, res) => {
-  console.log(req.params.id);
   try {
     const warehouseFound = await knex("warehouses").where({
       id: req.params.id,
@@ -92,12 +90,12 @@ const getInventoryListByWarehouseId = async (req, res) => {
 
 /**
  * Return all inventories in json format
- * @param {*} _req
- * @param {*} res
+ * @param {*} _req 
+ * @param {*} res 
  */
 const getAll = async (_req, res) => {
   try {
-    const data = await knex("warehouses");
+    const data = await knex('warehouses');
     res.status(200).json(data);
   } catch (err) {
     res.status(400).json({
