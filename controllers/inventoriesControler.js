@@ -68,7 +68,6 @@ const editSingleInventory = async (req, res) => {
   try {
     //Response returns 400 if unsuccessful because of missing properties in the request body
     if (
-      !("id" in req.body) ||
       !("warehouse_name" in req.body) ||
       !("item_name" in req.body) ||
       !("description" in req.body) ||
@@ -82,7 +81,7 @@ const editSingleInventory = async (req, res) => {
     }
 
     //Response returns 400 if the quantity is not a number
-    if (!(typeof req.body.quantity === "number")) {
+    if (isNaN(Number(req.body.quantity))) {
       return res
         .status(400)
         .send(`Quantity is not a number for inventory id ${req.body.id}`);
@@ -113,13 +112,12 @@ const editSingleInventory = async (req, res) => {
     }
 
     const updatedData = {
-      id: req.body.id,
       warehouse_id: warehouseFound.id,
       item_name: req.body.item_name,
       description: req.body.description,
       category: req.body.category,
       status: req.body.item_status,
-      quantity: req.body.quantity,
+      quantity: Number(req.body.quantity),
     };
 
     const rowsUpdated = await knex("inventories")
@@ -175,7 +173,7 @@ const addNewInventory = async (req, res) => {
       !("item_name" in req.body) ||
       !("description" in req.body) ||
       !("category" in req.body) ||
-      // !("status" in req.body) ||
+      !("status" in req.body) ||
       !("quantity" in req.body)
     ) {
       return res
