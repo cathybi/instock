@@ -171,12 +171,11 @@ const addNewInventory = async (req, res) => {
   try {
     //Response returns 400 if unsuccessful because of missing properties in the request body
     if (
-      !("id" in req.body) ||
       !("warehouse_name" in req.body) ||
       !("item_name" in req.body) ||
       !("description" in req.body) ||
       !("category" in req.body) ||
-      !("status" in req.body) ||
+      // !("status" in req.body) ||
       !("quantity" in req.body)
     ) {
       return res
@@ -185,7 +184,7 @@ const addNewInventory = async (req, res) => {
     }
 
     //Response returns 400 if the quantity is not a number
-    if (typeof req.body.quantity !== "number") {
+    if (isNaN(Number(req.body.quantity))) {
       return res
         .status(400)
         .send(`Quantity is not a number for inventory id ${req.body.id}`);
@@ -211,7 +210,7 @@ const addNewInventory = async (req, res) => {
       description: req.body.description,
       category: req.body.category,
       status: req.body.status,
-      quantity: req.body.quantity,
+      quantity: Number(req.body.quantity),
     };
 
     // Insert the new inventory into the database
