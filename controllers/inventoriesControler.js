@@ -7,7 +7,17 @@ const knex = require("knex")(require("../knexfile"));
  */
 const getInventoriesList = async (_req, res) => {
   try {
-    const data = await knex("inventories");
+    const data = await knex("inventories")
+      .join("warehouses", "inventories.warehouse_id", "=", "warehouses.id")
+      .select(
+        "inventories.id as id",
+        "warehouses.warehouse_name as warehouse_name",
+        "inventories.item_name as item_name",
+        "inventories.description as description",
+        "inventories.category as category",
+        "inventories.status as status",
+        "inventories.quantity as quantity"
+      );
     res.status(200).json(data);
   } catch (err) {
     res.status(500).json({
@@ -23,7 +33,18 @@ const getInventoriesList = async (_req, res) => {
  */
 const getSingleInventory = async (req, res) => {
   try {
-    const inventory = await knex("inventories").where({ id: req.params.id });
+    const inventory = await knex("inventories")
+      .where({ "inventories.id": req.params.id })
+      .join("warehouses", "inventories.warehouse_id", "=", "warehouses.id")
+      .select(
+        "inventories.id as id",
+        "warehouses.warehouse_name as warehouse_name",
+        "inventories.item_name as item_name",
+        "inventories.description as description",
+        "inventories.category as category",
+        "inventories.status as status",
+        "inventories.quantity as quantity"
+      );
     if (inventory[0]) {
       res.status(200).json(inventory[0]);
     } else {
@@ -47,13 +68,13 @@ const editSingleInventory = async (req, res) => {
   try {
     //Response returns 400 if unsuccessful because of missing properties in the request body
     if (
-      !req.body.id ||
-      !req.body.warehouse_id ||
-      !req.body.item_name ||
-      !req.body.description ||
-      !req.body.category ||
-      !req.body.status ||
-      !req.body.quantity
+      !("id" in req.body) ||
+      !("warehouse_name" in req.body) ||
+      !("item_name" in req.body) ||
+      !("description" in req.body) ||
+      !("category" in req.body) ||
+      !("status" in req.body) ||
+      !("quantity" in req.body)
     ) {
       return res
         .status(400)
@@ -69,7 +90,7 @@ const editSingleInventory = async (req, res) => {
 
     //Response returns 400 if the warehouse_id value does not exist in the warehouses table
     const warehouseFound = await knex("warehouses").where({
-      id: req.body.warehouse_id,
+      warehouse_name: req.body.warehouse_name,
     });
     if (!warehouseFound[0]) {
       return res
@@ -91,9 +112,19 @@ const editSingleInventory = async (req, res) => {
         );
     }
 
+    const updatedData = {
+      id: req.body.id,
+      warehouse_id: warehouseFound.id,
+      item_name: req.body.item_name,
+      description: req.body.description,
+      category: req.body.category,
+      status: req.body.item_status,
+      quantity: req.body.quantity,
+    };
+
     const rowsUpdated = await knex("inventories")
       .where({ id: req.params.id })
-      .update(req.body);
+      .update(updatedData);
 
     const updatedInventory = await knex("inventories").where({
       id: req.params.id,
@@ -137,50 +168,64 @@ const deleteSingleInventory = async (req, res) => {
  * J24BTW-28: Back-End: API to POST/CREATE a New Inventory Item
  */
 const addNewInventory = async (req, res) => {
-  if (
-    !req.body.id ||
-    !req.body.warehouse_id ||
-    !req.body.item_name ||
-    !req.body.description ||
-    !req.body.category ||
-    !req.body.status ||
-    !req.body.quantity
-  ) {
-    return res
-      .status(400)
-      .send("Please provide all information for the request");
-  }
-
-  const warehouseFound = await knex("warehouses").where({
-    id: req.body.warehouse_id,
-  });
-  if (!warehouseFound[0]) {
-    return res
-      .status(400)
-      .send(
-        `The warehouse_id ${req.body.warehouse_id} does not exist in the warehouses table`
-      );
-  }
-
-  if (!(typeof req.body.quantity === "number")) {
-    return res
-      .status(400)
-      .send(`Quantity is not a number for inventory id ${req.body.id}`);
-  }
-
   try {
-    const result = await knex("inventories").insert(req.body);
+    //Response returns 400 if unsuccessful because of missing properties in the request body
+    if (
+      !("id" in req.body) ||
+      !("warehouse_name" in req.body) ||
+      !("item_name" in req.body) ||
+      !("description" in req.body) ||
+      !("category" in req.body) ||
+      !("status" in req.body) ||
+      !("quantity" in req.body)
+    ) {
+      return res
+        .status(400)
+        .send("Please provide all information for the request");
+    }
 
-    const newInventoryId = result[0];
-    const createdWarehouse = await knex("invenorties").where({
+    //Response returns 400 if the quantity is not a number
+    if (typeof req.body.quantity !== "number") {
+      return res
+        .status(400)
+        .send(`Quantity is not a number for inventory id ${req.body.id}`);
+    }
+
+    //Response returns 400 if the warehouse_id value does not exist in the warehouses table
+    const warehouseFound = await knex("warehouses")
+      .where({
+        warehouse_name: req.body.warehouse_name,
+      })
+      .first();
+    if (!warehouseFound) {
+      return res
+        .status(400)
+        .send(
+          `The warehouse_id ${req.body.warehouse_id} does not exist in the warehouses table`
+        );
+    }
+
+    const newInventory = {
+      warehouse_id: warehouseFound.id,
+      item_name: req.body.item_name,
+      description: req.body.description,
+      category: req.body.category,
+      status: req.body.status,
+      quantity: req.body.quantity,
+    };
+
+    // Insert the new inventory into the database
+    const insertedIds = await knex("inventories").insert(newInventory);
+    const newInventoryId = insertedIds[0];
+
+    // Fetch the newly inserted inventory
+    const insertedInventory = await knex("inventories").where({
       id: newInventoryId,
     });
 
-    res.status(201).json(createdWarehouse);
+    res.status(201).json(insertedInventory[0]);
   } catch (error) {
-    res.status(500).json({
-      message: `Unable to create new inventory: ${error}`,
-    });
+    res.status(500).send(`Error in adding new inventory: ${error.message}`);
   }
 };
 
